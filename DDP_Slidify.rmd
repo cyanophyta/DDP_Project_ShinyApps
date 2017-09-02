@@ -1,0 +1,70 @@
+---
+title: 'DDP Project: Shiny Apps for Data Exploration'
+author: "cyanophyta"
+date: "02/09/2017"
+output: slidy_presentation
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+## Goal of the application
+
+- While exploring a dataset we need to study basic plots of various variables of a dataset. 
+- We attempt to make this work easier by using a Shiny Apps application here. 
+- Dataset considered here is faithfuld from ggplot2 package.
+
+```{r warning=FALSE, echo = TRUE}
+library(ggplot2, warn.conflicts = FALSE, quietly = TRUE)
+data("faithfuld")
+dim(faithfuld)
+str(faithfuld)
+```
+
+## App features
+Using this app, user can
+
+* study Histogram, Line Graph or Box-and-whisker Plot of any variable in the dataset
+* change color of the graph, if needed
+* in case of histogram, change number of intervals (bins) to be used in the graph
+* study summary data for the selected variable, displayed in the following format:
+```{r echo=TRUE}
+  summat <- as.matrix(summary(faithfuld$waiting))
+  rownames(summat) <- c("Minimum", "1st quartile", "Median", "Mean", "3rd quartile", "Maximum")
+  colnames(summat) <- "Summary"
+  summat
+```
+
+## Sample plot types for variable 'waiting'
+
+User selects one of the variables of the dataset in the Shiny app. Based on this selection, and type of graph/color, one of the available graph is displayed by the app.
+```{r echo=FALSE}
+color <- "gray"
+par(mfrow = c(3, 1))
+x <- faithfuld$waiting
+bins <- seq(min(x), max(x), length.out = 20 + 1)
+hist(x, 
+     breaks = bins, 
+     col = color, 
+     border = 'white', 
+     main = paste("Histogram of ", "Waiting time"), 
+     xlab = "Waiting time")   
+plot(x, 
+     type = "l", 
+     col = color, 
+     main = paste("LIne Graph of ", "Waiting time"), 
+     xlab = "Index", 
+     ylab = "Waiting time")
+boxplot(x, 
+        col = color, 
+        main = paste("Box and Whisket Plot of ", "Waiting time"),
+        xlab = "Waiting time")
+```
+
+## Possible future enhancements
+
+- add more tuning parameters for the graphs
+- add a tab to select any of the two variables and show scatter plot
+- add a tab, where user can select multiple variables and then display pairwise scatter plots
+
